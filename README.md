@@ -6,8 +6,7 @@ A production-ready **Photo Album Management** web application built with Django,
 
 ## 🌐 Live Application
 
-**Live URL:** `https://your-app-name.onrender.com`
-_(Replace with your actual Render deployment URL after deploying)_
+**Live URL:** `https://github.com/Wylton15/Production-Ready-Django-Photo-Album-Management-System`
 
 ---
 
