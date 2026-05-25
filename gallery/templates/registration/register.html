@@ -1,0 +1,74 @@
+{% extends "gallery/base.html" %}
+{% block title %}Register – PhotoVault{% endblock %}
+
+{% block content %}
+<div style="min-height:70vh; display:flex; align-items:center; justify-content:center;">
+    <div style="width:100%; max-width:460px;">
+        <div style="text-align:center; margin-bottom:2rem;">
+            <div style="font-size:3rem; margin-bottom:0.5rem;">🚀</div>
+            <h1 class="section-title">Create <span>Account</span></h1>
+            <p style="color:var(--text-m);">Join PhotoVault and start uploading your photos</p>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" id="register-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    {% for err in form.non_field_errors %}
+                        <div class="alert alert-error" style="margin-bottom:1rem;">❌ {{ err }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username *</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <ul class="errorlist">{% for e in form.username.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email Address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <ul class="errorlist">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Password *</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <ul class="errorlist">{% for e in form.password1.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password *</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <ul class="errorlist">{% for e in form.password2.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div style="background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2);
+                            border-radius:var(--radius-sm); padding:0.75rem 1rem; margin-bottom:1.25rem;
+                            font-size:0.82rem; color:var(--text-m);">
+                    ℹ️ <strong>Note:</strong> New accounts have standard user access (upload &amp; manage your own photos).
+                    Album administration requires staff privileges granted by a superuser.
+                </div>
+
+                <div class="form-actions" style="flex-direction:column; gap:0.75rem;">
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" id="register-submit-btn">
+                        ✅ Create Account
+                    </button>
+                    <a href="{% url 'login' %}" class="btn btn-ghost" style="width:100%; justify-content:center; text-align:center;" id="register-login-link">
+                        Already have an account? Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

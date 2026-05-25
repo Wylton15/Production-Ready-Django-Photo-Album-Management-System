@@ -1,0 +1,23 @@
+{% extends "gallery/base.html" %}
+{% block title %}Delete Album – PhotoVault{% endblock %}
+
+{% block content %}
+<div class="danger-card" id="album-delete-card">
+    <div class="icon">🗑️</div>
+    <h2>Delete Album?</h2>
+    <p>
+        You are about to permanently delete the album
+        <strong style="color:var(--text);">"{{ object.title }}"</strong>.
+        <br><br>
+        Photos inside this album will <em>not</em> be deleted — they will simply become unattached.
+        This action <strong>cannot be undone</strong>.
+    </p>
+    <form method="POST" id="album-delete-form">
+        {% csrf_token %}
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+            <button type="submit" class="btn btn-danger" id="confirm-album-delete-btn">Yes, Delete Album</button>
+            <a href="{% url 'album_list' %}" class="btn btn-ghost" id="cancel-album-delete-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

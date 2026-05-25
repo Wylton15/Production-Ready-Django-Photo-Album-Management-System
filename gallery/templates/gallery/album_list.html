@@ -1,0 +1,77 @@
+{% extends "gallery/base.html" %}
+{% block title %}Albums – PhotoVault{% endblock %}
+
+{% block content %}
+<div class="hero-strip">
+    <div>
+        <h1 class="section-title">Photo <span>Albums</span></h1>
+        <p class="section-subtitle" style="margin:0;">
+            {% if query %}Results for "<strong>{{ query }}</strong>"{% else %}Browse all curated collections{% endif %}
+        </p>
+    </div>
+    {% if user.is_staff or user.is_superuser %}
+    <a href="{% url 'album_create' %}" class="btn btn-primary" id="create-album-btn">＋ New Album</a>
+    {% endif %}
+</div>
+
+<!-- Search -->
+<form method="GET" class="search-bar" id="album-search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search albums…" id="album-search-input">
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+    {% if query %}<a href="{% url 'album_list' %}" class="btn btn-ghost btn-sm">✕ Clear</a>{% endif %}
+</form>
+
+{% if albums %}
+<div class="album-grid">
+    {% for album in albums %}
+    <div class="album-card" style="text-decoration:none; color:inherit;" id="album-card-{{ album.pk }}">
+        <a href="{% url 'album_detail' album.pk %}" style="text-decoration:none; color:inherit; display:block;">
+            <div class="album-cover">
+                {% if album.cover_image %}
+                    <img src="{{ album.cover_image.url }}" alt="{{ album.title }}">
+                {% else %}
+                    <span class="no-cover-icon">📁</span>
+                {% endif %}
+            </div>
+            <div class="album-body">
+                <h3>{{ album.title }}</h3>
+                {% if album.description %}<p>{{ album.description|truncatewords:15 }}</p>{% endif %}
+                <div class="album-meta">
+                    <span class="photo-count">🖼 {{ album.photo_count }} photo{{ album.photo_count|pluralize }}</span>
+                    <span style="font-size:0.75rem; color:var(--text-d);">{{ album.created_at|date:"M Y" }}</span>
+                </div>
+            </div>
+        </a>
+        {% if user.is_staff or user.is_superuser %}
+        <div class="album-admin-actions">
+            <a href="{% url 'album_update' album.pk %}" class="btn btn-ghost btn-sm" id="edit-album-{{ album.pk }}">✏️ Edit</a>
+            <a href="{% url 'album_delete' album.pk %}" class="btn btn-danger btn-sm" id="delete-album-{{ album.pk }}">🗑 Delete</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">&laquo; Prev</a>
+    {% endif %}
+    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty-state">
+    <div class="icon">📭</div>
+    <h3>{% if query %}No albums found for "{{ query }}"{% else %}No albums yet{% endif %}</h3>
+    <p>{% if user.is_staff or user.is_superuser %}Create the first album to organize your photos.{% else %}Albums will appear here once an admin creates them.{% endif %}</p>
+    {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'album_create' %}" class="btn btn-primary" style="margin-top:1.25rem;">＋ Create First Album</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

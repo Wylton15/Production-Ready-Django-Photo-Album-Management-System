@@ -1,0 +1,66 @@
+{% extends "gallery/base.html" %}
+{% block title %}{{ album.title }} – PhotoVault{% endblock %}
+
+{% block content %}
+<!-- Album Header -->
+<div style="margin-bottom:2rem;">
+    <a href="{% url 'album_list' %}" style="color:var(--text-d); text-decoration:none; font-size:0.85rem;">← Back to Albums</a>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+        <div>
+            <h1 class="section-title">{{ album.title }}</h1>
+            {% if album.description %}<p class="section-subtitle">{{ album.description }}</p>{% endif %}
+            <p style="font-size:0.82rem; color:var(--text-d);">
+                📅 Created {{ album.created_at|date:"F d, Y" }} &nbsp;·&nbsp;
+                👤 {{ album.created_by.username }} &nbsp;·&nbsp;
+                🖼 {{ photos|length }} photo{{ photos|length|pluralize }}
+            </p>
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            {% if user.is_authenticated %}
+                <a href="{% url 'photo_create' %}?album={{ album.pk }}" class="btn btn-primary" id="album-upload-btn">📤 Add Photo</a>
+            {% endif %}
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'album_update' album.pk %}" class="btn btn-ghost" id="album-edit-btn">✏️ Edit Album</a>
+                <a href="{% url 'album_delete' album.pk %}" class="btn btn-danger" id="album-delete-btn">🗑 Delete Album</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Photos inside album -->
+{% if photos %}
+<div class="photo-grid">
+    {% for photo in photos %}
+    <div class="photo-card" id="album-photo-{{ photo.pk }}">
+        <div class="img-wrap">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+            <div class="overlay">
+                {% if user.is_authenticated %}
+                    {% if user.is_staff or user.is_superuser or photo.owner == user %}
+                        <a href="{% url 'photo_update' photo.pk %}" class="btn btn-ghost btn-sm" id="edit-ap-{{ photo.pk }}">✏️ Edit</a>
+                        <a href="{% url 'photo_delete' photo.pk %}" class="btn btn-danger btn-sm" id="del-ap-{{ photo.pk }}">🗑 Delete</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="photo-info">
+            <h3>{{ photo.title }}</h3>
+            {% if photo.description %}<p>{{ photo.description|truncatewords:12 }}</p>{% endif %}
+            <div class="photo-meta">
+                📅 {{ photo.uploaded_at|date:"M d, Y" }}
+                {% if photo.owner %}&nbsp;·&nbsp;👤 {{ photo.owner.username }}{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">🖼️</div>
+    <h3>No photos in this album yet</h3>
+    {% if user.is_authenticated %}
+        <a href="{% url 'photo_create' %}?album={{ album.pk }}" class="btn btn-primary" style="margin-top:1rem;">📤 Upload First Photo</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

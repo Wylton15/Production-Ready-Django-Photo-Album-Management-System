@@ -1,0 +1,31 @@
+{% extends "gallery/base.html" %}
+{% block title %}Delete Photo – PhotoVault{% endblock %}
+
+{% block content %}
+<div class="danger-card" id="photo-delete-card">
+    <div class="icon">🗑️</div>
+    <h2>Delete Photo?</h2>
+    <p>
+        You are about to permanently delete
+        <strong style="color:var(--text);">"{{ photo.title }}"</strong>
+        and remove it from Cloudinary storage.
+        <br><br>This action <strong>cannot be undone</strong>.
+    </p>
+
+    {% if photo.image %}
+    <div style="margin-bottom:1.5rem;">
+        <img src="{{ photo.image.url }}" alt="{{ photo.title }}"
+             style="width:160px; height:110px; object-fit:cover; border-radius:var(--radius-sm);
+                    border:1px solid rgba(239,68,68,0.3); opacity:0.7;">
+    </div>
+    {% endif %}
+
+    <form method="POST" id="photo-delete-form">
+        {% csrf_token %}
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+            <button type="submit" class="btn btn-danger" id="confirm-photo-delete-btn">Yes, Delete It</button>
+            <a href="{% url 'gallery_home' %}" class="btn btn-ghost" id="cancel-photo-delete-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
