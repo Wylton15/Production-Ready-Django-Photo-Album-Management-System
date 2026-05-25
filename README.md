@@ -12,8 +12,7 @@ A production-ready **Photo Album Management** web application built with Django,
 
 ## 🗂️ Repository
 
-**GitHub:** `https://github.com/your-username/cloud-render`
-_(Replace with your actual repository URL)_
+**GitHub:** `https://github.com/Wylton15/Production-Ready-Django-Photo-Album-Management-System`
 
 ---
 
